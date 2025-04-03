@@ -4,6 +4,15 @@ import PIL
 
 
 def load_model():
+    """
+    Load a pre-trained Mask R-CNN model with a ResNet-50 backbone.
+
+    This function initializes the Mask R-CNN model pre-trained on the COCO dataset 
+    and sets it to evaluation mode for inference.
+
+    Returns:
+        torchvision.models.detection.MaskRCNN: The pre-trained Mask R-CNN model.
+    """
     #loading pre-trained model. Using Mask R-CNN
     model = torchvision.models.detection.maskrcnn_resnet50_fpn(pretrained=True)
 
@@ -14,6 +23,15 @@ def load_model():
 
 
 def load_data(image_path):
+    """
+    Load an image from the specified path and convert it to a PyTorch tensor.
+
+    Args:
+        image_path (str): The file path to the image to be loaded.
+
+    Returns:
+        torch.Tensor: The image represented as a normalized tensor of shape (C, H, W).
+    """
     #loading PIL Image from path and creating a torch tensor from it
     img_pil = PIL.Image.open(image_path)
     img_tensor = transforms.functional.to_tensor(img_pil)
@@ -41,6 +59,23 @@ COCO_INSTANCE_CATEGORY_NAMES = [
 vehicles_indices = [3]
 
 def predict(image_path, cuda = False):
+    """
+     Predict the number of vehicles in an image using a pre-trained Mask R-CNN model.
+
+    This function loads a pre-trained Mask R-CNN model, processes the input image,
+    and performs inference to count the number of vehicles detected in the image.
+
+    Args:
+        image_path (str): The file path to the input image.
+        cuda (bool, optional): Whether to use GPU for inference. Defaults to False.
+
+    Returns:
+        int: The number of vehicles detected in the image.
+    
+    Notes:
+        - A detection threshold of 0.5 is applied to filter predictions based on confidence scores.
+        - The function specifically counts objects belonging to classes defined in `vehicles_indices`.
+    """
     
     #setting the model to evaluation mode for inference
     model = load_model()
